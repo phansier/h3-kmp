@@ -1,6 +1,4 @@
-import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,79 +6,114 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish)
 }
 
-group = "io.github.kotlin"
-version = "1.0.0"
+group = "io.github.phansier.h3"
+version = "0.0.1"
 
 kotlin {
-    jvm()
+    jvmToolchain(17)
+
     androidTarget {
         publishLibraryVariants("release")
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-    linuxX64()
 
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                //put your multiplatform dependencies here
+    fun KotlinNativeTarget.h3CInterop() {
+        compilations["main"].cinterops {
+            val h3 by creating {
+                defFile(project.file("../cinterop/h3/h3.def"))
+                includeDirs(project.file("../cinterop/h3"))
             }
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
+    }
+    iosX64() { h3CInterop() }
+    iosArm64() { h3CInterop() }
+    iosSimulatorArm64() { h3CInterop() }
+
+    applyDefaultHierarchyTemplate()
+
+    sourceSets {
+        commonMain.dependencies {
+            //put your multiplatform dependencies here
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+        androidInstrumentedTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.junit.ktx)
+            implementation(libs.androidx.test.runner)
+        }
+        iosMain.dependencies {
+        }
+    }
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.configure {
+                compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+            }
+        }
+    }
+    //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
+    targets.withType<KotlinNativeTarget> {
+        compilations["main"].compileTaskProvider.configure {
+            compilerOptions {
+                freeCompilerArgs.add("-Xexport-kdoc")
             }
         }
     }
 }
 
 android {
-    namespace = "org.jetbrains.kotlinx.multiplatform.library.template"
+    namespace = "com.beriukhov.h3"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
+            }
+        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/androidMain/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
-    signAllPublications()
+    if (project.hasProperty("signing.keyId")) signAllPublications()
 
     coordinates(group.toString(), "library", version.toString())
 
     pom {
-        name = "My library"
-        description = "A library."
-        inceptionYear = "2024"
-        url = "https://github.com/kotlin/multiplatform-library-template/"
+        name = "H3 KMP"
+        description = "KMP (iOS+Android) binding for H3 library"
+        inceptionYear = "2025"
+        url = "https://github.com/phansier/h3-kmp/"
         licenses {
             license {
-                name = "XXX"
-                url = "YYY"
-                distribution = "ZZZ"
+                name = "MIT"
+                url = "https://opensource.org/licenses/MIT"
             }
         }
         developers {
             developer {
-                id = "XXX"
-                name = "YYY"
-                url = "ZZZ"
+                id = "a76f5e93-8114-4ba3-825a-f8156ac753dc"
+                name = "Andrei Beriukhov"
+                url = "beriukhov@gmail.com"
             }
         }
         scm {
-            url = "XXX"
-            connection = "YYY"
-            developerConnection = "ZZZ"
+            url = "https://github.com/phansier/h3-kmp/"
         }
     }
 }

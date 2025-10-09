@@ -13,5 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "multiplatform-library-template"
+rootProject.name = "h3-kmp"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":library")
+include(":sample")

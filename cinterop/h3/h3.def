@@ -1,0 +1,13 @@
+headers = headers/h3api.h
+# package = com.beriukhov.h3.native
+compilerOpts = -I/cinterop/h3
+#
+linkerOpts = -L../cinterop/h3
+staticLibraries = libh3.a
+libraryPaths = ../cinterop/h3
+
+# reference https://github.com/ACINQ/secp256k1-kmp/blob/master/build.gradle.kts
+
+# todo
+# build .a universal for iphone and separate for simulator and separate them by target
+# https://github.com/ACINQ/secp256k1-kmp/blob/master/src/nativeInterop/cinterop/libsecp256k1.def
