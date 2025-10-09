@@ -18,7 +18,7 @@ A library to convert Uber's H3 geo-index to LatLng vertices and back for Kotlin 
 kotlin {
    sourceSets {
       commonMain.dependencies {
-            implementation("io.github.phansier.h3:h3-kmp:0.0.1")
+            implementation("io.github.phansier.h3:library:0.0.1")
 
             /*
             # or using version catalog:
@@ -38,7 +38,7 @@ kotlin {
 
 ```kotlin
 dependencies {
-    implementation("io.github.phansier.h3:h3-kmp:0.0.1")
+    implementation("io.github.phansier.h3:library:0.0.1")
     // implementation(libs.h3)
 }
 ```
