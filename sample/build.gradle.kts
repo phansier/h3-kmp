@@ -31,16 +31,16 @@ kotlin {
     sourceSets {
         
 //        androidMain.dependencies {
-//            implementation(compose.preview)
+////            implementation(compose.preview)
 //            implementation(libs.androidx.activity.compose)
 //        }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.jetbrains.compose.runtime)
+            implementation(libs.jetbrains.compose.foundation)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(libs.jetbrains.compose.ui)
+//            implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.compose.preview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 

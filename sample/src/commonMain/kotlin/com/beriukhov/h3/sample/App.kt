@@ -18,10 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.beriukhov.h3.H3
 import com.beriukhov.h3.LatLng
-import h3_kmp.sample.generated.resources.Res
-import h3_kmp.sample.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
