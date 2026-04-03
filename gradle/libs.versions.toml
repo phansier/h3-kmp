@@ -12,6 +12,8 @@ material3 = "1.9.0"
 androidx-lifecycle = "2.9.4"
 androidx-activity = "1.11.0"
 library = "0.0.1"
+uiToolingPreview = "1.10.6"
+uiTooling = "1.10.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -26,13 +28,13 @@ androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle
 jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+jetbrains-compose-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 jetbrains-compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 #jetbrains-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "plugin-composemp" }
 jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 
 
 library = { module = "io.github.phansier.h3:library", version.ref = "library" }
-
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

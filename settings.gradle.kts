@@ -20,4 +20,5 @@ rootProject.name = "h3-kmp"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":androidLibrary")
 include(":library")
-include(":sample")
+include(":commonSample")
+include(":androidSample")
