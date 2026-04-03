@@ -1,16 +1,19 @@
 [versions]
-agp = "8.13.0"
-kotlin = "2.2.20"
+agp = "9.1.0"
+kotlin = "2.3.10"
 android-minSdk = "26"
 android-compileSdk = "36"
 android-targetSdk = "35"
 junitKtx = "1.3.0"
 androidx-test-runner = "1.7.0"
-composeMultiplatform = "1.9.0"
+composeMultiplatform = "1.10.1"
+material3 = "1.9.0"
 
 androidx-lifecycle = "2.9.4"
 androidx-activity = "1.11.0"
 library = "0.0.1"
+uiToolingPreview = "1.10.6"
+uiTooling = "1.10.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -22,12 +25,21 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
-library = { module = "io.github.phansier.h3:library", version.ref = "library" }
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+jetbrains-compose-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
+jetbrains-compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+#jetbrains-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "plugin-composemp" }
+jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 
+
+library = { module = "io.github.phansier.h3:library", version.ref = "library" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+androidKmpLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

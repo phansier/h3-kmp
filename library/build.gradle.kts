@@ -2,19 +2,28 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidKmpLibrary)
     alias(libs.plugins.vanniktech.mavenPublish)
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.1"
+version = "0.0.2"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
-    androidTarget {
-        publishLibraryVariants("release")
+    android {
+        namespace = "com.beriukhov.h3"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
     }
+
+//        publishLibraryVariants("release")
+//    }
 
     fun KotlinNativeTarget.h3CInterop() {
         compilations["main"].cinterops {
@@ -32,12 +41,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        androidInstrumentedTest.dependencies {
+        androidMain.dependencies {
+            implementation(projects.androidLibrary)
+        }
+        get("androidDeviceTest").dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.junit.ktx)
             implementation(libs.androidx.test.runner)
@@ -58,31 +69,6 @@ kotlin {
             compilerOptions {
                 freeCompilerArgs.add("-Xexport-kdoc")
             }
-        }
-    }
-}
-
-android {
-    namespace = "com.beriukhov.h3"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
-            }
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/androidMain/cpp/CMakeLists.txt")
-            version = "3.22.1"
         }
     }
 }
