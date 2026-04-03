@@ -15,22 +15,12 @@ kotlin {
     android {
         namespace = "com.beriukhov.h3"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
-//        defaultConfig {
-//            minSdk = libs.versions.android.minSdk.get().toInt()
-//            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//            externalNativeBuild {
-//                cmake {
-//                    arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
-//                }
-//            }
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        withDeviceTest {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
-//
-//        externalNativeBuild {
-//            cmake {
-//                path = file("src/androidMain/cpp/CMakeLists.txt")
-//                version = "3.22.1"
-//            }
-//        }
+    }
 
 //        publishLibraryVariants("release")
 //    }
@@ -51,12 +41,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        androidInstrumentedTest.dependencies {
+        androidMain.dependencies {
+            implementation(projects.androidLibrary)
+        }
+        get("androidDeviceTest").dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.junit.ktx)
             implementation(libs.androidx.test.runner)
