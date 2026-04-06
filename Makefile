@@ -13,4 +13,7 @@ copyHeader:
 	cp library/src/androidMain/cpp/h3lib/include/h3api.h cinterop/h3/headers/h3api.h
 
 mavenCentralPublish:
-    ./gradlew :library:publishAndReleaseToMavenCentral --no-configuration-cache
+	./gradlew :library:publishAndReleaseToMavenCentral --no-configuration-cache
+
+mavenCentralPublishAndroid:
+	./gradlew :androidLibrary:publishAndReleaseToMavenCentral --no-configuration-cache
