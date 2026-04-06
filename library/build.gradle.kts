@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.2"
+version = "0.0.4"
 
 kotlin {
     jvmToolchain(21)

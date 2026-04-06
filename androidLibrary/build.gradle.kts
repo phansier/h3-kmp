@@ -7,10 +7,10 @@ kotlin {
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.2"
+version = "0.0.4"
 
 android {
-    namespace = "com.beriukhov.h3"
+    namespace = "com.beriukhov.h3.ndk"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
