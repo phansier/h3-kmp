@@ -21,3 +21,6 @@ mavenCentralPublishLib:
 
 
 mavenCentralPublish: mavenCentralPublishAndroid mavenCentralPublishLib
+
+mavenLocalPublish:
+	./gradlew publishToMavenLocal

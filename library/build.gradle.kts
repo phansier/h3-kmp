@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.4"
+version = "0.0.5"
 
 kotlin {
     jvmToolchain(21)
@@ -30,6 +30,7 @@ kotlin {
             val h3 by creating {
                 defFile(project.file("../cinterop/h3/h3.def"))
                 includeDirs(project.file("../cinterop/h3"))
+                extraOpts("-libraryPath", project.file("../cinterop/h3").absolutePath)
             }
         }
     }
