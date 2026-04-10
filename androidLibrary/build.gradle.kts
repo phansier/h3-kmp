@@ -7,7 +7,7 @@ kotlin {
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.4"
+version = "0.0.5"
 
 android {
     namespace = "com.beriukhov.h3.ndk"

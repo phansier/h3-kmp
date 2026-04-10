@@ -22,5 +22,5 @@ mavenCentralPublishLib:
 
 mavenCentralPublish: mavenCentralPublishAndroid mavenCentralPublishLib
 
-mavenLocalPublishOnlyLib:
-	./gradlew :library:publishToMavenLocal
+mavenLocalPublish:
+	./gradlew publishToMavenLocal
