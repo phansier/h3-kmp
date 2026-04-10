@@ -30,6 +30,7 @@ kotlin {
             val h3 by creating {
                 defFile(project.file("../cinterop/h3/h3.def"))
                 includeDirs(project.file("../cinterop/h3"))
+                extraOpts("-libraryPath", project.file("../cinterop/h3").absolutePath)
             }
         }
     }
