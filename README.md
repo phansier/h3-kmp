@@ -1,11 +1,12 @@
 # H3-KMP library ![Last Version](https://img.shields.io/maven-central/v/io.github.phansier.h3/library)
 
 
-A library to convert Uber's H3 geo-index to LatLng vertices and back for Kotlin Multiplatform: iOS and Android
+A library to convert Uber's H3 geo-index to LatLng vertices and back for Kotlin Multiplatform: iOS, Android, and Wasm/JS (browser + Node).
 
 ## Experimental
 
-- Android, iOS are ready to use, API may change
+- Android, iOS, wasmJs are ready to use, API may change
+- wasmJs variant bridges to the [`h3-js`](https://www.npmjs.com/package/h3-js) npm package via JS interop (Kotlin/Wasm has no cinterop, so the in-tree C sources used for iOS/Android cannot be reused directly).
 
 ## Instalation
 > [!NOTE]
