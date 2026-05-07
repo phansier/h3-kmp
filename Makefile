@@ -24,3 +24,6 @@ mavenCentralPublish: mavenCentralPublishAndroid mavenCentralPublishLib
 
 mavenLocalPublish:
 	./gradlew publishToMavenLocal
+
+runWasmSample:
+	./gradlew :commonSample:wasmJsBrowserDevelopmentRun --continuous

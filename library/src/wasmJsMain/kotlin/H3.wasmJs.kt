@@ -31,7 +31,7 @@ actual class H3 {
         }
 
         private fun checkResolution(res: Int) {
-            require(!(res < 0 || res > 15)) {
+            require(res in 0..15) {
                 "resolution $res is out of range (must be 0 <= res <= 15)"
             }
         }

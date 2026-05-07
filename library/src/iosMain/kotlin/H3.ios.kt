@@ -20,8 +20,7 @@ actual class H3 {
         /**
          * Find the H3 index of the resolution <code>res</code> cell containing the lat/lon (in degrees)
          *
-         * @param lat Latitude in degrees.
-         * @param lng Longitude in degrees.
+         * @param geo LatLng = Latitude & Longitude in degrees.
          * @param res Resolution, 0 &lt;= res &lt;= 15
          * @return The H3 index.
          * @throws IllegalArgumentException latitude, longitude, or resolution are out of range.
@@ -76,7 +75,7 @@ actual class H3 {
          * @throws IllegalArgumentException `res` is not a valid H3 resolution.
          */
         private fun checkResolution(res: Int) {
-            require(!(res < 0 || res > 15)) {
+            require(res in 0..15) {
                 "resolution $res is out of range (must be 0 <= res <= 15)"
             }
         }

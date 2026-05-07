@@ -7,11 +7,11 @@ android-targetSdk = "35"
 junitKtx = "1.3.0"
 androidx-test-runner = "1.7.0"
 composeMultiplatform = "1.10.1"
-material3 = "1.9.0"
 
 androidx-lifecycle = "2.9.4"
 androidx-activity = "1.11.0"
 library = "0.0.1"
+maplibre-compose = "0.12.1"
 uiToolingPreview = "1.10.6"
 uiTooling = "1.10.6"
 
@@ -31,10 +31,11 @@ jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "
 jetbrains-compose-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 jetbrains-compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 #jetbrains-compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "plugin-composemp" }
-jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
 
 
 library = { module = "io.github.phansier.h3:library", version.ref = "library" }
+
+maplibre-compose = { module = "org.maplibre.compose:maplibre-compose", version.ref = "maplibre-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

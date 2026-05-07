@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKmpLibrary)
@@ -23,19 +25,37 @@ kotlin {
         }
     }
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        outputModuleName.set("composeApp")
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.jetbrains.compose.runtime)
             implementation(libs.jetbrains.compose.foundation)
-            implementation(libs.jetbrains.compose.material3)
             implementation(libs.jetbrains.compose.ui)
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.library)
+//            implementation(libs.library)
+            implementation(projects.library)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.maplibre.compose)
+        }
+        iosMain.dependencies {
+            implementation(libs.maplibre.compose)
         }
     }
 }
