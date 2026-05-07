@@ -23,9 +23,6 @@ kotlin {
         }
     }
 
-//        publishLibraryVariants("release")
-//    }
-
     fun KotlinNativeTarget.h3CInterop() {
         compilations["main"].cinterops {
             val h3 by creating {
