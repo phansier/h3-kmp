@@ -7,7 +7,7 @@ import zeroLatLngRes4
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class IosH3Test {
+class H3WasmJsTest {
 
     @OptIn(ExperimentalStdlibApi::class)
     @Test
@@ -15,7 +15,6 @@ class IosH3Test {
         assertEquals(zeroLatLngRes4, geoToH3(LatLng(0.0, 0.0), res = 4).toHexString())
     }
 
-    // actually 7 decimal places are enough (~1.1 cm accuracy)
     @Test
     fun testVertices() {
         assertEquals(
@@ -23,5 +22,4 @@ class IosH3Test {
             vertices(zeroLatLngRes4, 8)
         )
     }
-
 }

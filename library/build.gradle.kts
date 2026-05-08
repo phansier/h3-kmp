@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -22,9 +23,6 @@ kotlin {
         }
     }
 
-//        publishLibraryVariants("release")
-//    }
-
     fun KotlinNativeTarget.h3CInterop() {
         compilations["main"].cinterops {
             val h3 by creating {
@@ -37,6 +35,12 @@ kotlin {
     iosX64() { h3CInterop() }
     iosArm64() { h3CInterop() }
     iosSimulatorArm64() { h3CInterop() }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+        nodejs()
+    }
 
     applyDefaultHierarchyTemplate()
 
@@ -55,6 +59,12 @@ kotlin {
             implementation(libs.androidx.test.runner)
         }
         iosMain.dependencies {
+        }
+        wasmJsMain.dependencies {
+            implementation(npm("h3-js", "4.2.1"))
+        }
+        wasmJsTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
     targets.configureEach {
