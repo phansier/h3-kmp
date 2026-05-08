@@ -27,3 +27,6 @@ mavenLocalPublish:
 
 runWasmSample:
 	./gradlew :commonSample:wasmJsBrowserDevelopmentRun --continuous
+
+buildWasm:
+	./gradlew :commonSample:wasmJsBrowserDistribution $(params)
