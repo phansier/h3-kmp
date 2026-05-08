@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		300646D22FAE049B0040B775 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = 300646D12FAE049B0040B775 /* MapLibre */; };
+		B9DA98022FC0000100A4DA20 /* ComposeApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DA98012FC0000100A4DA20 /* ComposeApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B9DA97B12DC1472C00A4DA20 /* sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9DA98012FC0000100A4DA20 /* ComposeApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ComposeApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9DA98022FC0000100A4DA20 /* ComposeApp.framework in Frameworks */,
 				300646D22FAE049B0040B775 /* MapLibre in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,6 +61,7 @@
 				B9DA98002DC14AA900A4DA20 /* Configuration */,
 				B9DA97B32DC1472C00A4DA20 /* iosApp */,
 				B9DA97B22DC1472C00A4DA20 /* Products */,
+				B9DA98032FC0000100A4DA20 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +71,14 @@
 				B9DA97B12DC1472C00A4DA20 /* sample.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B9DA98032FC0000100A4DA20 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B9DA98012FC0000100A4DA20 /* ComposeApp.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
