@@ -32,7 +32,7 @@ actual fun H3MapView(
 
     MaplibreMap(
         modifier = modifier,
-        baseStyle = BaseStyle.Demo,
+        baseStyle = BaseStyle.Uri(DEFAULT_STYLE_URL),
         cameraState = camera,
     ) {
         val geoJson = vertices.toFeatureCollectionJson()

@@ -21,8 +21,6 @@ import org.w3c.dom.HTMLLinkElement
 import org.w3c.dom.HTMLScriptElement
 
 private const val MAPLIBRE_VERSION = "4.7.1"
-//private const val DEFAULT_STYLE_URL = "https://demotiles.maplibre.org/style.json"
-private const val DEFAULT_STYLE_URL = "https://tiles.openfreemap.org/styles/liberty"
 
 private var nextMapId: Int = 0
 private var maplibreLoadStarted: Boolean = false

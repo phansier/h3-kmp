@@ -40,7 +40,7 @@ actual fun H3MapView(
 
     MaplibreMap(
         modifier = modifier,
-        baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
+        baseStyle = BaseStyle.Uri(DEFAULT_STYLE_URL),
         cameraState = camera,
     ) {
         val geoJson = vertices.toFeatureCollectionJson()
