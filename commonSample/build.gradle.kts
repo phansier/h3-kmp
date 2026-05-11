@@ -44,8 +44,8 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-//            implementation(libs.library)
-            implementation(projects.library)
+            implementation(libs.library)
+//            implementation(projects.library)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

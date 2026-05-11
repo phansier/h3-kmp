@@ -10,7 +10,7 @@ composeMultiplatform = "1.10.1"
 
 androidx-lifecycle = "2.9.4"
 androidx-activity = "1.11.0"
-library = "0.0.1"
+library = "0.0.6"
 maplibre-compose = "0.12.1"
 uiToolingPreview = "1.10.6"
 uiTooling = "1.10.6"
