@@ -33,6 +33,9 @@ jobs:
           java-version: '21'
           cache: 'gradle'
       - name: Build Web
+        env:
+          # Consume the published Maven artifact so the deployed demo verifies the release.
+          ORG_GRADLE_PROJECT_useLocalLibrary: "false"
         run: make buildWasm
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

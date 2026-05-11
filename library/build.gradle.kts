@@ -38,6 +38,12 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
+        // When commonSample consumes the published Maven artifact, it ships an embedded
+        // npm package named "h3-kmp-library" — identical to this module's default. Rename
+        // the local output so yarn workspaces don't see two workspaces with the same name.
+        if (!providers.gradleProperty("useLocalLibrary").orNull.toBoolean()) {
+            outputModuleName.set("h3-kmp-library-local")
+        }
         browser()
         nodejs()
     }
