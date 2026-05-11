@@ -44,8 +44,11 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.library)
-//            implementation(projects.library)
+            if (providers.gradleProperty("useLocalLibrary").orNull.toBoolean()) {
+                implementation(projects.library)
+            } else {
+                implementation(libs.library)
+            }
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
