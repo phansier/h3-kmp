@@ -1,9 +1,11 @@
 package com.beriukhov.h3
 
 import h3.CellBoundary
+import h3.areNeighborCells
 import h3.cellToBoundary
 import h3.latLngToCell
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.ULongVar
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.get
@@ -66,6 +68,15 @@ actual class H3 {
                     }
                 }
                 return list
+            }
+        }
+
+        /** Returns whether or not the two provided cells border each other. */
+        actual fun areNeighborCells(origin: ULong, destination: ULong): Boolean {
+            memScoped {
+                val out = alloc<IntVar>()
+                areNeighborCells(origin, destination, out.ptr)
+                return out.value != 0
             }
         }
 

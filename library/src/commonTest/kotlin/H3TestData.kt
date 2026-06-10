@@ -1,6 +1,10 @@
 import com.beriukhov.h3.LatLng
 
 internal val zeroLatLngRes4 = "084754a9ffffffff"
+
+// res-4 cells around zeroLatLngRes4, computed with h3-js gridDisk
+internal val neighborOfZeroLatLngRes4 = "084754e7ffffffff"
+internal val notNeighborOfZeroLatLngRes4 = "084754e1ffffffff"
 internal val boundaries = listOf(
     LatLng(lat = -0.34749776, lng = 0.04469065),
     LatLng(lat = -0.1490766, lng = 0.13959856),

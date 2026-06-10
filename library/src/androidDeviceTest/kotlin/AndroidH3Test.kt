@@ -1,8 +1,12 @@
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.beriukhov.h3.H3
 import com.beriukhov.h3.H3.Companion.geoToH3
+import com.beriukhov.h3.areNeighborCells
 import com.beriukhov.h3.H3.Companion.vertices
 import com.beriukhov.h3.LatLng
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -10,6 +14,8 @@ import org.junit.runner.RunWith
 class AndroidIH3Test {
 
     private val zeroLatLngRes4 = "084754a9ffffffff"
+    private val neighborOfZeroLatLngRes4 = "084754e7ffffffff"
+    private val notNeighborOfZeroLatLngRes4 = "084754e1ffffffff"
     private val boundaries = listOf(
         LatLng(lat = -0.34749776, lng = 0.04469065),
         LatLng(lat = -0.1490766, lng = 0.13959856),
@@ -28,5 +34,12 @@ class AndroidIH3Test {
     @Test
     fun testVertices() {
         assertEquals(boundaries, vertices(zeroLatLngRes4))
+    }
+
+    @Test
+    fun testAreNeighborCells() {
+        assertTrue(H3.areNeighborCells(zeroLatLngRes4, neighborOfZeroLatLngRes4))
+        assertFalse(H3.areNeighborCells(zeroLatLngRes4, notNeighborOfZeroLatLngRes4))
+        assertFalse(H3.areNeighborCells(zeroLatLngRes4, zeroLatLngRes4))
     }
 }
