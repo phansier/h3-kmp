@@ -80,3 +80,16 @@ Java_com_beriukhov_h3_Jni_cellToBoundary(JNIEnv *env, jobject thiz, jlong h3, jd
         return -1;
     }
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_beriukhov_h3_Jni_areNeighborCells(JNIEnv *env, jobject thiz, jlong origin,
+                                           jlong destination) {
+    int out;
+    H3Error err = areNeighborCells(origin, destination, &out);
+    if (err) {
+        ThrowH3Exception(env, err);
+        return JNI_FALSE;
+    }
+    return out ? JNI_TRUE : JNI_FALSE;
+}

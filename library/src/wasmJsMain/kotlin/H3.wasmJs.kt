@@ -2,7 +2,7 @@ package com.beriukhov.h3
 
 import kotlin.js.ExperimentalWasmJsInterop
 
-@OptIn(ExperimentalWasmJsInterop::class)
+@OptIn(ExperimentalWasmJsInterop::class, ExperimentalStdlibApi::class)
 actual class H3 {
 
     actual companion object {
@@ -29,6 +29,9 @@ actual class H3 {
                 }
             }
         }
+
+        actual fun areNeighborCells(origin: ULong, destination: ULong): Boolean =
+            jsAreNeighborCells(origin.toLong().toHexString(), destination.toLong().toHexString())
 
         private fun checkResolution(res: Int) {
             require(res in 0..15) {

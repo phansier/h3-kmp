@@ -10,3 +10,6 @@ import kotlin.js.JsNumber
 internal external fun latLngToCell(lat: Double, lng: Double, res: Int): String
 
 internal external fun cellToBoundary(h3Index: String): JsArray<JsArray<JsNumber>>
+
+@JsName("areNeighborCells")
+internal external fun jsAreNeighborCells(origin: String, destination: String): Boolean

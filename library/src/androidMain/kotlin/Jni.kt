@@ -19,6 +19,9 @@ class Jni {
     /** Find the cell boundary in latitude, longitude (degrees) coordinates for the cell */
     external fun cellToBoundary(h3: Long, verts: DoubleArray): Int
 
+    /** Returns whether or not the two provided cells border each other. */
+    external fun areNeighborCells(origin: Long, destination: Long): Boolean
+
 }
 
 

@@ -43,6 +43,10 @@ actual class H3 {
             return out
         }
 
+        /** Returns whether or not the two provided cells border each other. */
+        actual fun areNeighborCells(origin: ULong, destination: ULong): Boolean =
+            jni.areNeighborCells(origin.toLong(), destination.toLong())
+
         private const val INVALID_INDEX: Long = 0L
         private const val MAX_CELL_BNDRY_VERTS = 10
 
