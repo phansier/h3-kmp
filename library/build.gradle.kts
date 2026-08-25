@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.phansier.h3"
-version = "0.0.7"
+version = "0.0.8"
 
 kotlin {
     jvmToolchain(21)
@@ -23,12 +23,16 @@ kotlin {
         }
     }
 
+    // libh3.a is a static archive whose objects record the platform they were built for,
+    // so every target needs its own copy: a simulator archive cannot be linked into a
+    // device app. `make buildIosDotA` produces these; the directory names match the
+    // Kotlin/Native target names.
     fun KotlinNativeTarget.h3CInterop() {
         compilations["main"].cinterops {
             val h3 by creating {
                 defFile(project.file("../cinterop/h3/h3.def"))
                 includeDirs(project.file("../cinterop/h3"))
-                extraOpts("-libraryPath", project.file("../cinterop/h3").absolutePath)
+                extraOpts("-libraryPath", project.file("../cinterop/h3/$targetName").absolutePath)
             }
         }
     }

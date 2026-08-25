@@ -4,6 +4,5 @@ staticLibraries = libh3.a
 
 # reference https://github.com/ACINQ/secp256k1-kmp/blob/master/build.gradle.kts
 
-# todo
-# build .a universal for iphone and separate for simulator and separate them by target
-# https://github.com/ACINQ/secp256k1-kmp/blob/master/src/nativeInterop/cinterop/libsecp256k1.def
+# staticLibraries is resolved against -libraryPath, which library/build.gradle.kts
+# points at a per-target directory. See `make buildIosDotA`.

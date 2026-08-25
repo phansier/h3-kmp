@@ -13,7 +13,6 @@ xcuserdata
 *.gpg
 
 /library/src/androidMain/cpp/h3lib/include/h3api.h
-/buildIos
 
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
