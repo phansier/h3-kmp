@@ -114,9 +114,9 @@ DECLSPEC const char *H3_EXPORT(describeH3Error)(H3Error err);
 
 /* library version numbers generated from VERSION file */
 // clang-format off
-#define H3_VERSION_MAJOR 
-#define H3_VERSION_MINOR 
-#define H3_VERSION_PATCH 
+#define H3_VERSION_MAJOR 4
+#define H3_VERSION_MINOR 2
+#define H3_VERSION_PATCH 1
 // clang-format on
 
 /** Maximum number of cell boundary vertices; worst case is pentagon:

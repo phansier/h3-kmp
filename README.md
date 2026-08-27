@@ -63,6 +63,21 @@ val h3Index: String = geoToH3(H3LatLng(0.0, 0.0), res = 4).toHexString()
 1) Run `./gradlew :library:publishToMavenLocal`
 2) Open `~/.m2/repository/io/github/phansier/h3/`
 
+### Updating the H3 C sources
+
+The H3 C library is vendored as sources under `androidLibrary/src/main/cpp/h3lib/`, shared by the Android
+(NDK) and iOS (cinterop) targets. Current version:
+[v4.2.1](https://github.com/uber/h3/releases/tag/v4.2.1).
+
+To bump it, on macOS with `cmake` installed (it rebuilds the committed `cinterop/h3/<target>/libh3.a`):
+
+```bash
+echo v4.5.0 > H3_VERSION
+make updateH3
+```
+
+`.github/workflows/update-h3.yml` checks monthly for a new H3 release and opens the bump PR by itself.
+
 ### Inspired by
 
 - [abc-kmm-h3](https://github.com/line/abc-kmm-h3) - not updated 4 years
