@@ -1,0 +1,138 @@
+# Watches uber/h3 for new releases and opens a PR re-vendoring the C sources.
+# Monthly: H3 ships a handful of releases a year, so anything tighter is noise.
+#
+# Runs on macOS because the vendoring step rebuilds the committed
+# cinterop/h3/*/libh3.a archives, which needs cmake and the iOS SDKs.
+name: Update H3 C sources
+
+on:
+  schedule:
+    # 1st of the month, 06:00 UTC.
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'H3 tag to vendor (e.g. v4.5.0). Defaults to the latest release.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  vendor:
+    runs-on: macos-latest
+    outputs:
+      branch: ${{ steps.pr.outputs.pull-request-branch }}
+      created: ${{ steps.pr.outputs.pull-request-number != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve target H3 version
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ -n "$REQUESTED" ]; then
+            target="$REQUESTED"
+          else
+            target=$(gh api repos/uber/h3/releases/latest --jq .tag_name)
+          fi
+          current=$(tr -d '[:space:]' < H3_VERSION)
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          if [ "$target" = "$current" ]; then
+            echo "Already on $current; nothing to do."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "H3 $current -> $target"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Re-vendor H3 sources
+        if: steps.resolve.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          echo "${{ steps.resolve.outputs.target }}" > H3_VERSION
+          ./scripts/update-h3.sh
+
+      - name: Summarise the source-file delta
+        if: steps.resolve.outputs.changed == 'true'
+        id: delta
+        run: |
+          set -euo pipefail
+          {
+            echo 'body<<PR_BODY'
+            echo "Vendors [H3 ${{ steps.resolve.outputs.target }}](https://github.com/uber/h3/releases/tag/${{ steps.resolve.outputs.target }}), up from \`${{ steps.resolve.outputs.current }}\`."
+            echo
+            echo 'Produced by `scripts/update-h3.sh` (see `.github/workflows/update-h3.yml`).'
+            echo
+            echo '### C source files added / removed'
+            echo
+            echo '```'
+            git status --porcelain -- androidLibrary/src/main/cpp/h3lib | grep -E '^(\?\?|A|D| D)' || echo '(none - only in-place edits)'
+            echo '```'
+            echo
+            echo '### Review checklist'
+            echo
+            echo '- [ ] `androidLibrary/src/main/cpp/jniapi.cpp` still matches the H3 signatures it wraps (`latLngToCell`, `cellToBoundary`, `areNeighborCells`).'
+            echo '- [ ] `library/src/*/kotlin` wrappers still compile against any renamed/removed H3 API.'
+            echo '- [ ] The three `cinterop/h3/*/libh3.a` archives in this PR were rebuilt from these sources.'
+            echo '- [ ] wasmJs `h3-js` pin in `library/build.gradle.kts` matches, with `kotlin-js-store/wasm/yarn.lock` refreshed alongside it (both skipped automatically if npm has no such h3-js version).'
+            echo 'PR_BODY'
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        if: steps.resolve.outputs.changed == 'true'
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and test iOS + wasm
+        if: steps.resolve.outputs.changed == 'true'
+        id: iostest
+        continue-on-error: true
+        # linkDebugTest* for all three targets is the regression guard from c77c50b:
+        # each Kotlin target links its own libh3.a, and a simulator archive cannot
+        # be linked into a device binary.
+        run: >-
+          ./gradlew :library:iosSimulatorArm64Test
+          :library:linkDebugTestIosArm64 :library:linkDebugTestIosX64
+          :library:wasmJsNodeTest --console=plain
+
+      - name: Create pull request
+        if: steps.resolve.outputs.changed == 'true'
+        id: pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-h3-${{ steps.resolve.outputs.target }}
+          commit-message: 'Update vendored H3 C sources to ${{ steps.resolve.outputs.target }}'
+          title: 'Update vendored H3 C sources to ${{ steps.resolve.outputs.target }}'
+          body: |
+            ${{ steps.delta.outputs.body }}
+
+            iOS + wasm build and test: `${{ steps.iostest.outcome }}`
+          # A failing gate still opens the PR, as a draft: a breaking upstream
+          # change is easier to review as a diff than to rediscover next week.
+          draft: ${{ steps.iostest.outcome != 'success' }}
+          labels: dependencies
+          delete-branch: true
+
+  android-check:
+    needs: vendor
+    if: needs.vendor.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.vendor.outputs.branch }}
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      # Compiles every globbed .c and links libh3kmp.so - where a source the glob
+      # missed would show up as an undefined symbol.
+      - run: ./gradlew :androidLibrary:assembleDebug --console=plain

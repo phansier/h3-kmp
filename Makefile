@@ -26,8 +26,12 @@ iosDotA:
 	mkdir -p cinterop/h3/$(target)
 	cp build/$(target)/libh3kmp.a cinterop/h3/$(target)/libh3.a
 
-copyHeader:
-	cp library/src/androidMain/cpp/h3lib/include/h3api.h cinterop/h3/headers/h3api.h
+# Re-vendors the H3 C sources at the version pinned in the H3_VERSION file, and
+# regenerates cinterop/h3/headers/h3api.h (which replaces the old copyHeader
+# target). On macOS it also runs buildIosDotA, so the .a files stay in step with
+# the sources.
+updateH3:
+	./scripts/update-h3.sh
 
 
 mavenCentralPublishAndroid:
