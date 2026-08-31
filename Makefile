@@ -9,6 +9,8 @@ buildIosDotA:
 	$(MAKE) iosDotA target=iosArm64            sysroot=iphoneos        arch=arm64
 	$(MAKE) iosDotA target=iosSimulatorArm64   sysroot=iphonesimulator arch=arm64
 	$(MAKE) iosDotA target=iosX64              sysroot=iphonesimulator arch=x86_64
+	# Records what these archives were built from, so CI can spot a stale commit.
+	./scripts/h3-sources-hash.sh > cinterop/h3/SOURCES.sha256
 
 # Matches the floor Kotlin/Native itself compiles iOS objects for. Without it CMake
 # stamps the current SDK version, which makes the linker warn in any app with a

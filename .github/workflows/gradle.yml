@@ -1,49 +1,119 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+# Builds and tests every platform the library ships: Android (NDK), wasmJs and iOS.
+#
+# The three matrix entries run in parallel, and each one guards a different half of
+# the vendored H3 C library:
+#   android - compiles every globbed .c and links libh3kmp.so
+#   ios     - links the same sources per Kotlin/Native target and runs the tests
+#   wasm    - no C at all; covers the h3-js bridge and the pin scripts/update-h3.sh
+#             rewrites alongside the sources
+name: CI
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_call:
 
 permissions:
   contents: read
 
+# Supersede a PR's older runs; never cut a main push short.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
+    name: ${{ matrix.name }}
     strategy:
+      # One platform breaking should still report the other two.
+      fail-fast: false
       matrix:
         include:
-          - target: iosSimulatorArm64Test
+          - name: android
+            os: ubuntu-latest
+            tasks: ":androidLibrary:assembleDebug"
+          - name: wasm
+            os: ubuntu-latest
+            tasks: ":library:wasmJsNodeTest"
+          # linkDebugTest* for both device and x64 is the regression guard from
+          # c77c50b: each target links its own libh3.a, and a simulator archive
+          # cannot be linked into a device binary.
+          - name: ios
             os: macos-latest
-# we need android emulator to load native lib
-#          - target: testDebugUnitTest
-#            os: ubuntu-latest
+            tasks: ":library:iosSimulatorArm64Test :library:linkDebugTestIosArm64 :library:linkDebugTestIosX64"
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Validate Gradle Wrapper
-      uses: gradle/actions/wrapper-validation@v3
-    - uses: actions/cache@v3
-      with:
-        path: |
-          ~/.konan
-        key: ${{ runner.os }}-${{ hashFiles('**/.lock') }}
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@ce999babab2de1c4b649dc15f0ee67e6246c994f
-      with:
-        arguments: ${{ matrix.target }}
+      - uses: actions/checkout@v5
+
+      # 21 to match jvmToolchain(21) in library/ and androidLibrary/. With 17 the
+      # build only worked because runners happen to ship a 21 for Gradle to find.
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Replaces the deprecated gradle-build-action. Brings the Gradle
+      # dependency/build cache, and validates the wrapper itself
+      # (validate-wrappers defaults to true), so no separate step for that.
+      - uses: gradle/actions/setup-gradle@v6
+
+      # setup-gradle does not cover the Kotlin/Native toolchain, and only the iOS
+      # leg downloads it. Keyed on the files that decide which toolchain is
+      # fetched; the old key hashed '**/.lock', which matches nothing, so it
+      # resolved to a bare "macOS-" and never invalidated.
+      - name: Cache Kotlin/Native toolchain
+        if: matrix.name == 'ios'
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-konan-
+
+      # The runner's Android SDK ships CMake 3.31.5 and 4.1.2, but
+      # androidLibrary/build.gradle.kts pins cmake { version = "3.22.1" } and AGP
+      # wants that exact version. No-op once it is present.
+      - name: Install the CMake the Android build pins
+        if: matrix.name == 'android'
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "cmake;3.22.1"
+
+      - name: Build with Gradle
+        run: ./gradlew ${{ matrix.tasks }} --console=plain
+
+      # The three archives are committed, so a source change without a rebuild
+      # leaves them stale with nothing to notice. Compare the fingerprint that
+      # `make buildIosDotA` records, not the archives themselves: ar records
+      # timestamps, and symbol names are identical across all three targets and
+      # across any change that does not add or remove a function. See
+      # scripts/h3-sources-hash.sh.
+      #
+      # Needs no toolchain, but lives on the iOS leg because that is where the
+      # archives matter.
+      - name: Check committed libh3.a is not stale
+        if: matrix.name == 'ios'
+        run: |
+          set -euo pipefail
+          expected=$(./scripts/h3-sources-hash.sh)
+          recorded=$(cat cinterop/h3/SOURCES.sha256 2>/dev/null || echo 'missing')
+          if [ "$expected" != "$recorded" ]; then
+            echo "::error::cinterop/h3/*/libh3.a do not match the current C sources."
+            echo "recorded: $recorded"
+            echo "expected: $expected"
+            echo "Run 'make buildIosDotA' on macOS and commit the archives plus"
+            echo "cinterop/h3/SOURCES.sha256."
+            exit 1
+          fi
+          echo "libh3.a archives match the sources ($expected)"
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.name }}
+          path: |
+            **/build/reports/tests/**
+            **/build/test-results/**
+          if-no-files-found: ignore
