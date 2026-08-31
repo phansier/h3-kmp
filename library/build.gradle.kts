@@ -71,7 +71,7 @@ kotlin {
         iosMain.dependencies {
         }
         wasmJsMain.dependencies {
-            implementation(npm("h3-js", "4.2.1"))
+            implementation(npm("h3-js", "4.5.0"))
         }
         wasmJsTest.dependencies {
             implementation(libs.kotlin.test)

@@ -67,7 +67,7 @@ val h3Index: String = geoToH3(H3LatLng(0.0, 0.0), res = 4).toHexString()
 
 The H3 C library is vendored as sources under `androidLibrary/src/main/cpp/h3lib/`, shared by the Android
 (NDK) and iOS (cinterop) targets. Current version:
-[v4.2.1](https://github.com/uber/h3/releases/tag/v4.2.1).
+[v4.5.0](https://github.com/uber/h3/releases/tag/v4.5.0).
 
 To bump it, on macOS with `cmake` installed (it rebuilds the committed `cinterop/h3/<target>/libh3.a`):
 
