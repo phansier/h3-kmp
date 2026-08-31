@@ -115,7 +115,8 @@ else
     echo
     echo "!!! libh3.a NOT rebuilt: needs macOS with cmake and the iOS SDKs."
     echo "!!! Run 'make buildIosDotA' on a Mac and commit cinterop/h3/*/libh3.a"
-    echo "!!! together with these sources, or the iOS build links a stale H3."
+    echo "!!! plus cinterop/h3/SOURCES.sha256 together with these sources, or the"
+    echo "!!! iOS build links a stale H3. CI checks that fingerprint."
 fi
 
 echo
