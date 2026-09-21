@@ -53,3 +53,6 @@ runWasmSample:
 
 buildWasm:
 	./gradlew :commonSample:wasmJsBrowserDistribution $(params)
+
+updateWebDepsLocks:
+	./gradlew :kotlinUpgradeYarnLock :kotlinWasmUpgradeYarnLock $(params)
